@@ -7,7 +7,7 @@ ENV PATH=/opt/flutter/bin:/opt/flutter/bin/cache/dart-sdk/bin:/cache/pub/bin:/op
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates curl wget git git-lfs unzip zip xz-utils jq make cmake ninja-build pkg-config clang \
-    build-essential openjdk-17-jdk-headless python3 python3-venv python3-pip nodejs npm \
+    build-essential openjdk-17-jdk-headless python3 python3-venv python3-pip \
     libglu1-mesa libgl1 libegl1 libgtk-3-dev xvfb xauth fonts-liberation fonts-noto-core fonts-noto-color-emoji fontconfig \
     imagemagick ffmpeg sqlite3 openssh-client rsync procps less nano tini \
     && curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg -o /usr/share/keyrings/gh.gpg \
@@ -30,8 +30,11 @@ RUN mkdir -p $ANDROID_HOME/cmdline-tools && cd /tmp \
 # Python outils (analyse, assets, QA visuelle)
 RUN python3 -m venv /opt/venv && /opt/venv/bin/pip install --no-cache-dir pillow numpy matplotlib scikit-image pyyaml requests trimesh pygltflib
 
-# Node outils (glTF/3D, assets)
-RUN npm install -g @gltf-transform/cli gltf-pipeline sharp-cli >/dev/null 2>&1 || true
+# Node 22 + outils glTF/3D (sharp doit embarquer ses binaires optionnels linux-x64)
+RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - && apt-get install -y nodejs && rm -rf /var/lib/apt/lists/* \
+    && npm install -g @gltf-transform/cli gltf-pipeline \
+    && cd /usr/local/lib/node_modules/@gltf-transform/cli && npm install --include=optional --os=linux --cpu=x64 sharp \
+    && gltf-transform --version
 
 # Précharge Flutter (artefacts Android + web) et vérifie
 RUN flutter precache --android --web && flutter --version && (flutter doctor -v || true)
