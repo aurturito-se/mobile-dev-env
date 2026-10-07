@@ -37,7 +37,11 @@ def main():
                         r["title"] = pg.title()
                         r["h_overflow"] = pg.evaluate("document.documentElement.scrollWidth > window.innerWidth + 1")
                         slug = re.sub(r"\W+", "_", url)[-50:]
-                        shot = f"{o.out}/{bn}_{vn}_{slug}.png"; pg.screenshot(path=shot, full_page=True); r["screenshot"] = shot
+                        shot = f"{o.out}/{bn}_{vn}_{slug}.png"
+                        try: pg.screenshot(path=shot, full_page=True)
+                        except Exception:
+                            r["note"] = "page trop haute: capture viewport seule"; pg.screenshot(path=shot)
+                        r["screenshot"] = shot
                         body = pg.inner_text("body")
                         r["missing_text"] = [x for x in o.expect if x not in body]
                         if not o.no_axe and os.path.exists(AXE):
