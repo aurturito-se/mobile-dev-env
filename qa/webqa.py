@@ -4,10 +4,11 @@ webqa.py URL [URL...] [--browsers chromium,firefox,webkit] [--viewports desktop,
 Sortie : DIR/report.json + report.md + captures PNG. Code retour 1 si échec (HTTP>=400, erreur console/JS, requête échouée, violation axe critical/serious, texte attendu absent)."""
 import argparse, json, os, re, sys, time
 from playwright.sync_api import sync_playwright
+AXE = os.popen("npm root -g").read().strip() + "/axe-core/axe.min.js"
 VIEWPORTS = {"desktop": {"viewport": {"width": 1366, "height": 768}},
              "tablet": {"viewport": {"width": 820, "height": 1180}},
              "mobile": {"viewport": {"width": 390, "height": 844}, "is_mobile": True, "has_touch": True, "device_scale_factor": 2}}
-AXE = "/usr/local/lib/node_modules/axe-core/axe.min.js"
+
 def main():
     a = argparse.ArgumentParser()
     a.add_argument("urls", nargs="+"); a.add_argument("--browsers", default="chromium")

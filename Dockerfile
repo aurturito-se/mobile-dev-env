@@ -33,7 +33,7 @@ RUN python3 -m venv /opt/venv && /opt/venv/bin/pip install --no-cache-dir pillow
 # Node 22 + outils glTF/3D (sharp doit embarquer ses binaires optionnels linux-x64)
 RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - && apt-get install -y nodejs && rm -rf /var/lib/apt/lists/* \
     && npm install -g @gltf-transform/cli gltf-pipeline \
-    && cd /usr/local/lib/node_modules/@gltf-transform/cli && npm install --include=optional --os=linux --cpu=x64 sharp \
+    && cd "$(npm root -g)/@gltf-transform/cli" && npm install --include=optional --os=linux --cpu=x64 sharp \
     && gltf-transform --version
 
 # Précharge Flutter (artefacts Android + web) et vérifie
