@@ -1,0 +1,25 @@
+services:
+  mobile-dev:
+    image: ghcr.io/aurturito-se/mobile-dev-env:latest
+    container_name: ai-stack-mobile-dev
+    restart: unless-stopped
+    environment:
+      - GH_TOKEN=${GH_TOKEN}
+      - GIT_USER=aurturita
+      - TZ=Europe/Paris
+    volumes:
+      - mobile_workspace:/workspace
+      - mobile_cache:/cache
+    deploy:
+      resources:
+        limits:
+          cpus: "3"
+          memory: 8g
+    networks:
+      - hermes_eofi_default
+volumes:
+  mobile_workspace:
+  mobile_cache:
+networks:
+  hermes_eofi_default:
+    external: true
