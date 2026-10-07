@@ -3,3 +3,6 @@ Conteneur de développement mobile (Flutter stable, Android SDK 34-36, JDK 17, N
 Image : ghcr.io/aurturito-se/mobile-dev-env:latest — déployée en stack Portainer inline, accès via `portainer_exec_container`.
 Volumes : /workspace (projets), /cache (pub + gradle).
 Pas d'émulateur Android (pas de /dev/kvm sur le VPS) : tests unitaires, goldens, analyse, builds APK/web.
+
+## QA web / PC (unifié)
+Playwright (chromium, firefox, webkit dans /opt/pw-browsers), axe-core, lighthouse, commande `webqa` (qa/webqa.py). Voir skill `mobile-dev-container`.
