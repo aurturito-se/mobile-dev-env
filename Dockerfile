@@ -39,6 +39,13 @@ RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - && apt-get install
 # Précharge Flutter (artefacts Android + web) et vérifie
 RUN flutter precache --android --web && flutter --version && (flutter doctor -v || true)
 
+# QA web (Playwright multi-navigateurs + axe-core + Lighthouse) — voir qa/webqa.py
+ENV PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers
+RUN /opt/venv/bin/pip install --no-cache-dir playwright && /opt/venv/bin/playwright install --with-deps chromium firefox webkit \
+    && npm install -g axe-core lighthouse && rm -rf /var/lib/apt/lists/* && chmod -R a+rX /opt/pw-browsers
+COPY qa/webqa.py /usr/local/bin/webqa
+RUN chmod +x /usr/local/bin/webqa
+
 RUN mkdir -p /cache/pub /cache/gradle /workspace && chmod -R 777 /cache /workspace
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
